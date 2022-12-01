@@ -1,0 +1,16 @@
+				CE QUE JE DOIS RETENIR DE BORN2BEROOT
+				
+Consignes generales:
+	- Mettre en place un serveur
+	- Il va falloir creer 2 partitions chiffrees 
+	- configurer un sys d'exploitation
+
+- Aptitude : 
+
+- Apt :
+
+- un service SSH :
+
+- pare feu UFW :
+
+- 
