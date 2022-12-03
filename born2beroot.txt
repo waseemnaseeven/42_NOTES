@@ -14,3 +14,7 @@ Consignes generales:
 - pare feu UFW :
 
 - 
+
+-> login as root : su -
+
+
