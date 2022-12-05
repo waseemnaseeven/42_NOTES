@@ -5,16 +5,104 @@ Consignes generales:
 	- Il va falloir creer 2 partitions chiffrees 
 	- configurer un sys d'exploitation
 
-- Aptitude : 
-
-- Apt :
-
 - un service SSH :
+	- c'est un protocole reseau qui permet a deux ou plusieurs ordi de pouvoir communiquer et de partager des donnees
+	- un service ssh permet de securiser un reseau
+	-> sudo apt-get update
+	-> sudo apt install openssh-server = installer server ssh
+	-> sudo systemctl status ssh = statut serveur ssh
+	-> sudo service ssh restart 
+	-> sudo nano /etc/ssh/sshd_config = pour changer le port en 4242
+		-> sudo grep Port /etc/ssh/sshd_config = pour verifier si le port est effectivement a 4242
+	
+	
 
 - pare feu UFW :
+	- c'est un programme qui te permet, avec de simples commandes, de gerer la securite 
+	- un pare-feu c'est un dispositif qui protege un sys infor connecte a internet des tentatives d'intrusion
+	-> apt-get install ufw = istallation ufw
+	-> sudo ufw enable = activation et deploiement du firewall
+	-> sudo ufw status 
+	-> sudo ufw allow ssh = ajouter les regles ssh a ufw
+	-> sudo ufw allow 4242 = ajouter le port au firewall
+	-> sudo ufw delete <numero de port a supprimer>
+	- parametrage du port de virtual box
+		- pour se connecter 'ssh wnaseeve@localhost -p 4242 
+			- si pb, changer le host en 4141 et laisser guest en 4242 (settings virtual box, pas la vm)
+			- exit pour logout
 
-- 
+- SetPasswdPolicy:
+	- changer la longueur 
+		-> sudo nano /etc/pam.d/common-password
+			-> ajouter minlen=10 a la ligne 'password [success=2...'
+	- checker si le mdp contient le username
+		-> ajouter lcredit =-1 ucredit=-1 dcredit=-1 maxrepeat=3 usercheck=0 difok=7 enforce_for_root 
+		a la ligne pam_pwquality.so
+	- expiration 
+		-> sudo nano /etc/login.defs : puis changer les valeurs des PASS_ pour 30 jours etc...
 
--> login as root : su -
+- creategroup:
+	-> $ sudo groupadd wnaseeve42
+	-> $ sudo groupadd evaluating
+	-> getent group = pour check
+
+- create user and assing into group
+	-> $ cut -d: -f1 /etc/passwd = check tous les users locals
+	-> $ sudo adduser new_username = creer un user
+	- assigner un user dans le group 'evaluating' 
+		-> $ sudo usermod -aG user42 your_username
+		-> $ sudo usermod -aG evaluating your_new_username
+	- check si le user est bien dans le group 
+		-> $ getent group user42
+		-> $ getent group evaluating
+	-> groups = check dans quel groupe le user se trouve
+	-> chage -l your_new_username = check si le new user detient les regles du mdp
+
+- configure sudoers group
+	- sudoers peut autoriser ou refuser a un user l'execution de taches privilegiees
+	-> sudo nano /etc/sudoers
+		- authentification de sudo doit etre limite a 3 essais
+		on change les defaults...
+
+- POUR LA DEFENSE 
+	-> hostnamectl = check qui host
+	-> $ hostnamectl set-hostname new_hostname = change hostname
+	-> sudo nano /etc/hosts
+	- changer l'ancien par le new = 127.0.0.1       localhost
+					 127.0.0.1       new_hostname
+	-> reboot
+
+- Crontab config
+	- un cron permet d'executer une commande a une certaine heure et une certaine date
+	-> $ sudo apt-get update -y
+	   $ sudo apt-get install -y net-tools
+
+	- Script permettant d'afficher les caracteristiques du PC : monitoring.sh
+	-> sudo visudo = pour autoriser les differents membres du group a executer ladite commande : monitoring.sh
+	- on peut executer le script directement :
+		-> sudo /usr/local/bin/monitoring.sh
+		-> sudo crontab -u root -e
+			- ajouter la regle des 10 mins : */10 * * * * /usr/local/bin/monitoring.sh
+	
+		
+
+- difference entre Centos et Debian : image
+
+- Aptitude et Apt :
+	Aptitude est un high level package manager mais dispose des fonctionnalites d'apt et apt dispose des fonctions de dpkg manager
+	Aptitude a des fonctionnalites d'apt et dispose aussi des commandes d'apt-mark et d'apt-cache
+
+App Armor: 
+	- 
+
+
+-> lsblk = pour un resume de la partition
+
+-> login as root = su -
+
+-> usermod -aG sudo your_username = ajouter user dans le sudo group
+
+-> getent group sudo : check si user est dans le sudo group
+
 
 
