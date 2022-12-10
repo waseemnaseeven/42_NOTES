@@ -77,7 +77,9 @@ int main(void)
 	printf("MA FONCTION FT_PRINTF: %d\n", ft_printf("%d\n", 2147483647));
 	// printf("longueur de mon exemple w/ printf : %d\n", printf("%d\n", -2147483648));
 	printf("MA FONCTION FT_PRINTF: %d\n", ft_printf("%d\n", -2147483648));
+	printf("longueur de mon exemple w/ printf : %d\n", printf("%d\n", 0));
 	printf("MA FONCTION FT_PRINTF: %d\n", ft_printf("%d\n", 0));
+	// printf("longueur de mon exemple w/ printf : %d\n", printf("%d\n", NULL));
 	printf("MA FONCTION FT_PRINTF: %d\n", ft_printf("%d\n", NULL));
 
 	ft_printf("\nPPOUR LE c : \n");
@@ -133,11 +135,9 @@ int main(void)
 	ft_printf("%p\n", &main);
 	printf("%p\n", ptr1);
 	ft_printf("%p\n", ptr1);
+	
+	ft_printf("Pour le mix : \n");
 
 }
-
-HOMEWORK = 
-	- construire le makefile
-	- push GNL
 
 VALIDATION AVANT LE 10 DECEMBRE

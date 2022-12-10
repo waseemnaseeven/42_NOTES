@@ -2,8 +2,15 @@
 				
 Consignes generales:
 	- Mettre en place un serveur
-	- Il va falloir creer 2 partitions chiffrees 
+	- Il va falloir creer 2 partitions chiffrees et 1 cryptee 
 	- configurer un sys d'exploitation
+-> lsblk = pour un resume de la partition
+
+-> login as root = su -
+
+-> usermod -aG sudo your_username = ajouter user dans le sudo group
+
+-> getent group sudo : check si user est dans le sudo group
 
 - un service SSH :
 	- c'est un protocole reseau qui permet a deux ou plusieurs ordi de pouvoir communiquer et de partager des donnees
@@ -15,17 +22,16 @@ Consignes generales:
 	-> sudo nano /etc/ssh/sshd_config = pour changer le port en 4242
 		-> sudo grep Port /etc/ssh/sshd_config = pour verifier si le port est effectivement a 4242
 	
-	
 
 - pare feu UFW :
 	- c'est un programme qui te permet, avec de simples commandes, de gerer la securite 
 	- un pare-feu c'est un dispositif qui protege un sys infor connecte a internet des tentatives d'intrusion
-	-> apt-get install ufw = istallation ufw
+	-> apt-get install ufw = installation ufw
 	-> sudo ufw enable = activation et deploiement du firewall
 	-> sudo ufw status 
 	-> sudo ufw allow ssh = ajouter les regles ssh a ufw
 	-> sudo ufw allow 4242 = ajouter le port au firewall
-	-> sudo ufw delete <numero de port a supprimer>
+	-> sudo ufw delete <numero de port a supprimer> OU sudo ufw deny <8080>
 	- parametrage du port de virtual box
 		- pour se connecter 'ssh wnaseeve@localhost -p 4242 
 			- si pb, changer le host en 4141 et laisser guest en 4242 (settings virtual box, pas la vm)
@@ -45,6 +51,7 @@ Consignes generales:
 	-> $ sudo groupadd wnaseeve42
 	-> $ sudo groupadd evaluating
 	-> getent group = pour check
+	-> sudo groupdel -f <legroupeasup>
 
 - create user and assing into group
 	-> $ cut -d: -f1 /etc/passwd = check tous les users locals
@@ -78,31 +85,63 @@ Consignes generales:
 	   $ sudo apt-get install -y net-tools
 
 	- Script permettant d'afficher les caracteristiques du PC : monitoring.sh
+		grep = va cherhcher du texte selon un pattern particulier dans un fichier
+		wc -l = permet de print
+		NR==chiffre = la ligne que l'on souhaite awk
+		awk = scan un text
 	-> sudo visudo = pour autoriser les differents membres du group a executer ladite commande : monitoring.sh
 	- on peut executer le script directement :
 		-> sudo /usr/local/bin/monitoring.sh
 		-> sudo crontab -u root -e
 			- ajouter la regle des 10 mins : */10 * * * * /usr/local/bin/monitoring.sh
 	
-		
-
-- difference entre Centos et Debian : image
-
-- Aptitude et Apt :
-	Aptitude est un high level package manager mais dispose des fonctionnalites d'apt et apt dispose des fonctions de dpkg manager
-	Aptitude a des fonctionnalites d'apt et dispose aussi des commandes d'apt-mark et d'apt-cache
-
-App Armor: 
-	- 
 
 
--> lsblk = pour un resume de la partition
-
--> login as root = su -
-
--> usermod -aG sudo your_username = ajouter user dans le sudo group
-
--> getent group sudo : check si user est dans le sudo group
+- diff apparmor et selinux:
+	Apparmor donne acces a tout et restreint par la suite tandis que SELinux restreint l'access a tous les applications 
+	par defaut et donne acces uniquement aux users qui dispose de la certification
 
 
+SOUTENANCE :
+	- resume du projet:
+		- parametrage d'un serveur debian avec partitionnement du disque dont le 3 cryptee
+		- parametrage serveur ssh
+			- pouvoir changer le hostname :
+				-> hostnamectl = check qui host
+				-> $ hostnamectl set-hostname new_hostname = change hostname
+				-> sudo nano /etc/hosts
+				- changer l'ancien par le new = 127.0.0.1       localhost
+								 127.0.0.1       new_hostname
+				-> reboot
 
+
+Mandatory part :
+	- basic functionning : installation d'un sys d'exploitation venant de la source debian, on dl une image iso donc creer
+	un lecteur dvd virtuel qui te permet de le lire. on installe donc debian.
+	- Debian pcq il est plus facile a prendre en main par rapport a centos, il s'upgrade automatiquement
+	- interet d'une VM : Tester un nouveau système d'exploitation sans avoir besoin de partitionner son disque dur. Le test 		peut ainsi s'effectuer sans risques d'endommager le disque dur de votre machine. Développer un logiciel ou un programme 		pour un autre système d'exploitation.
+	- difference between aptidude et apt :	Aptitude est un high level package manager (python) mais dispose des fonctionnalites 		d'apt, et apt dispose des fonctions de dpkg manager. Aptitude a des fonctionnalites d'apt et dispose aussi des 		commandes d'apt-mark et d'apt-cache.
+	- App Armor : c'est un framework de controle d'acces, c'est un set de regles que va devoir respecter certains programmes pour avoir acces a des fichiers.
+	- SSH : ...
+	
+	- creation d'un nouveau user (supra)
+	- Sur les mdp :
+		nano /etc/login.defs  <- password expire policy
+		nano /etc/pam.d/common-password <- password policy
+		sudo crontab -l <- cron schedule
+	- pour cron toutes les 30sec 
+	(So * * * * * means every minute of every hour of every day of every month and every day of the week .)
+ * * * * *  command to execute
+ ┬ ┬ ┬ ┬ ┬
+ │ │ │ │ │
+ │ │ │ │ │
+ │ │ │ │ └───── day of week (0 - 7) (0 to 6 are Sunday to Saturday, or use names; 7 is Sunday, the same as 0)
+ │ │ │ └────────── month (1 - 12)
+ │ │ └─────────────── day of month (1 - 31)
+ │ └──────────────────── hour (0 - 23)
+ └───────────────────────── min (0 - 59)
+		- sudo crontab -e
+			*/1 * * * * /path/to/monitoring.sh
+			*/1 * * * * sleep 30s && /path/to/monitoring.sh
+			
+		LVM = logical volume Manager : c'est une partition virtuelle 
